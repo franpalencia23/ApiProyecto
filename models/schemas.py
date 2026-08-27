@@ -14,7 +14,15 @@ class RegionBase(BaseModel):
     altitud_msnm: Optional[int] = None
 
 class RegionCreate(RegionBase): pass
-class RegionUpdate(RegionBase): pass
+
+class RegionUpdate(BaseModel):
+    nombre: Optional[str] = None
+    departamento: Optional[str] = None
+    municipio: Optional[str] = None
+    latitud: Optional[float] = None
+    longitud: Optional[float] = None
+    altitud_msnm: Optional[int] = None
+
 class RegionResponse(RegionBase):
     id_region: int
 
@@ -30,7 +38,15 @@ class EspecieVegetalBase(BaseModel):
     descripcion: Optional[str] = None
 
 class EspecieVegetalCreate(EspecieVegetalBase): pass
-class EspecieVegetalUpdate(EspecieVegetalBase): pass
+
+class EspecieVegetalUpdate(BaseModel):
+    nombre_cientifico: Optional[str] = None
+    nombre_comun: Optional[str] = None
+    familia: Optional[str] = None
+    umbral_estres_min: Optional[float] = None
+    umbral_estres_max: Optional[float] = None
+    descripcion: Optional[str] = None
+
 class EspecieVegetalResponse(EspecieVegetalBase):
     id_especie: int
 
@@ -48,7 +64,17 @@ class ZonaReforestacionBase(BaseModel):
     longitud: Optional[float] = None
 
 class ZonaReforestacionCreate(ZonaReforestacionBase): pass
-class ZonaReforestacionUpdate(ZonaReforestacionBase): pass
+
+class ZonaReforestacionUpdate(BaseModel):
+    id_region: Optional[int] = None
+    id_especie: Optional[int] = None
+    nombre_zona: Optional[str] = None
+    area_hectareas: Optional[float] = None
+    fecha_siembra: Optional[date] = None
+    estado: Optional[str] = None
+    latitud: Optional[float] = None
+    longitud: Optional[float] = None
+
 class ZonaReforestacionResponse(ZonaReforestacionBase):
     id_zona: int
 
@@ -63,7 +89,14 @@ class TipoSensorBase(BaseModel):
     descripcion: Optional[str] = None
 
 class TipoSensorCreate(TipoSensorBase): pass
-class TipoSensorUpdate(TipoSensorBase): pass
+
+class TipoSensorUpdate(BaseModel):
+    nombre: Optional[str] = None
+    unidad_medida: Optional[str] = None
+    rango_min: Optional[float] = None
+    rango_max: Optional[float] = None
+    descripcion: Optional[str] = None
+
 class TipoSensorResponse(TipoSensorBase):
     id_tipo_sensor: int
 
@@ -80,7 +113,16 @@ class SensorBase(BaseModel):
     longitud: Optional[float] = None
 
 class SensorCreate(SensorBase): pass
-class SensorUpdate(SensorBase): pass
+
+class SensorUpdate(BaseModel):
+    id_zona: Optional[int] = None
+    id_tipo_sensor: Optional[int] = None
+    codigo_sensor: Optional[str] = None
+    fecha_instalacion: Optional[date] = None
+    estado: Optional[str] = None
+    latitud: Optional[float] = None
+    longitud: Optional[float] = None
+
 class SensorResponse(SensorBase):
     id_sensor: int
 
@@ -96,23 +138,43 @@ class PersonalBase(BaseModel):
     especialidad: Optional[str] = None
 
 class PersonalCreate(PersonalBase): pass
-class PersonalUpdate(PersonalBase): pass
+
+class PersonalUpdate(BaseModel):
+    nombre: Optional[str] = None
+    apellido: Optional[str] = None
+    cargo: Optional[str] = None
+    email: Optional[str] = None
+    telefono: Optional[str] = None
+    especialidad: Optional[str] = None
+
 class PersonalResponse(PersonalBase):
     id_personal: int
 
 # ==========================================
 # 7. MEDICION
+# id_personal es opcional: una lectura automática de sensor no la
+# registra ninguna persona. tipo_medicion identifica el tipo de dato.
 # ==========================================
 class MedicionBase(BaseModel):
     id_zona: int
     id_sensor: int
-    id_personal: int
+    id_personal: Optional[int] = None
+    tipo_medicion: str
     valor: float
     unidad: Optional[str] = None
     observaciones: Optional[str] = None
 
 class MedicionCreate(MedicionBase): pass
-class MedicionUpdate(MedicionBase): pass
+
+class MedicionUpdate(BaseModel):
+    id_zona: Optional[int] = None
+    id_sensor: Optional[int] = None
+    id_personal: Optional[int] = None
+    tipo_medicion: Optional[str] = None
+    valor: Optional[float] = None
+    unidad: Optional[str] = None
+    observaciones: Optional[str] = None
+
 class MedicionResponse(MedicionBase):
     id_medicion: int
     fecha_hora: datetime
@@ -127,7 +189,13 @@ class TipoAlertaBase(BaseModel):
     protocolo_accion: Optional[str] = None
 
 class TipoAlertaCreate(TipoAlertaBase): pass
-class TipoAlertaUpdate(TipoAlertaBase): pass
+
+class TipoAlertaUpdate(BaseModel):
+    nombre: Optional[str] = None
+    nivel_severidad: Optional[str] = None
+    descripcion: Optional[str] = None
+    protocolo_accion: Optional[str] = None
+
 class TipoAlertaResponse(TipoAlertaBase):
     id_tipo_alerta: int
 
@@ -141,7 +209,14 @@ class AlertaBase(BaseModel):
     descripcion: Optional[str] = None
 
 class AlertaCreate(AlertaBase): pass
-class AlertaUpdate(AlertaBase): pass
+
+class AlertaUpdate(BaseModel):
+    id_medicion: Optional[int] = None
+    id_tipo_alerta: Optional[int] = None
+    estado: Optional[str] = None
+    descripcion: Optional[str] = None
+    fecha_resolucion: Optional[datetime] = None
+
 class AlertaResponse(AlertaBase):
     id_alerta: int
     fecha_generacion: datetime
@@ -161,6 +236,16 @@ class TratamientoBase(BaseModel):
     notas: Optional[str] = None
 
 class TratamientoCreate(TratamientoBase): pass
-class TratamientoUpdate(TratamientoBase): pass
+
+class TratamientoUpdate(BaseModel):
+    id_zona: Optional[int] = None
+    id_personal: Optional[int] = None
+    fecha_inicio: Optional[date] = None
+    fecha_fin: Optional[date] = None
+    tipo_tratamiento: Optional[str] = None
+    volumen_agua_litros: Optional[float] = None
+    resultado: Optional[str] = None
+    notas: Optional[str] = None
+
 class TratamientoResponse(TratamientoBase):
     id_tratamiento: int

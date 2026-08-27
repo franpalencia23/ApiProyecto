@@ -7,7 +7,7 @@ from routers import (
 
 app = FastAPI(
     title="API — Monitoreo de Estrés Hídrico en Zonas de Reforestación",
-    description="API REST completa con FastAPI + Supabase",
+    description="API REST completa con FastAPI + Neón",
     version="1.0.0"
 )
 
