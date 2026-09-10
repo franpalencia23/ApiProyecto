@@ -130,8 +130,10 @@ class SensorResponse(SensorBase):
 # 6. PERSONAL
 # ==========================================
 class PersonalBase(BaseModel):
-    nombre: str
-    apellido: str
+    primer_nombre: str
+    segundo_nombre: Optional[str] = None
+    primer_apellido: str
+    segundo_apellido: Optional[str] = None
     cargo: Optional[str] = None
     email: Optional[str] = None
     telefono: Optional[str] = None
@@ -140,8 +142,10 @@ class PersonalBase(BaseModel):
 class PersonalCreate(PersonalBase): pass
 
 class PersonalUpdate(BaseModel):
-    nombre: Optional[str] = None
-    apellido: Optional[str] = None
+    primer_nombre: Optional[str] = None
+    segundo_nombre: Optional[str] = None
+    primer_apellido: Optional[str] = None
+    segundo_apellido: Optional[str] = None
     cargo: Optional[str] = None
     email: Optional[str] = None
     telefono: Optional[str] = None
@@ -249,3 +253,29 @@ class TratamientoUpdate(BaseModel):
 
 class TratamientoResponse(TratamientoBase):
     id_tratamiento: int
+
+# ==========================================
+# 11. ROL
+# ==========================================
+class RolResponse(BaseModel):
+    id_roles: int
+    tipo_usuario: str
+
+# ==========================================
+# 12. USUARIO
+# ==========================================
+class UsuarioCreate(BaseModel):
+    email: str
+    password: str          # contraseña en texto plano, SOLO de entrada
+    id_rol: int
+
+class UsuarioLogin(BaseModel):
+    email: str
+    password: str          # contraseña en texto plano, SOLO de entrada
+
+class UsuarioResponse(BaseModel):
+    id_usuarios: int
+    email: str
+    id_rol: int
+    creacion: date
+    # OJO: password_hash NO está aquí a propósito

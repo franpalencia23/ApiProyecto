@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 
 from core.database import get_db
 from core.repository import BaseRepository
+from core.auth_deps import obtener_usuario_actual, requiere_admin
 from models.schemas import PersonalCreate, PersonalUpdate, PersonalResponse
 
 router = APIRouter()
@@ -14,28 +15,34 @@ def get_repo(db = Depends(get_db)) -> PersonalRepository:
     return PersonalRepository(db)
 
 @router.get("/", response_model=list[PersonalResponse])
-async def listar(limit: int = Query(100, ge=1), offset: int = Query(0, ge=0), repo: PersonalRepository = Depends(get_repo)):
+async def listar(limit: int = Query(100, ge=1), offset: int = Query(0, ge=0),
+                  repo: PersonalRepository = Depends(get_repo),
+                  usuario = Depends(obtener_usuario_actual)):
     return repo.get_all(limit=limit, offset=offset)
 
 @router.get("/{id_personal}", response_model=PersonalResponse)
-async def obtener(id_personal: int, repo: PersonalRepository = Depends(get_repo)):
+async def obtener(id_personal: int, repo: PersonalRepository = Depends(get_repo),
+                   usuario = Depends(obtener_usuario_actual)):
     item = repo.get_by_id(id_personal)
     if not item:
         raise HTTPException(status_code=404, detail="Registro de personal no encontrado")
     return item
 
 @router.post("/", response_model=PersonalResponse, status_code=201)
-async def crear(data: PersonalCreate, repo: PersonalRepository = Depends(get_repo)):
+async def crear(data: PersonalCreate, repo: PersonalRepository = Depends(get_repo),
+                 usuario = Depends(requiere_admin)):
     return repo.create(data.model_dump(exclude_unset=True))
 
 @router.put("/{id_personal}", response_model=PersonalResponse)
-async def actualizar(id_personal: int, data: PersonalUpdate, repo: PersonalRepository = Depends(get_repo)):
+async def actualizar(id_personal: int, data: PersonalUpdate, repo: PersonalRepository = Depends(get_repo),
+                      usuario = Depends(requiere_admin)):
     item = repo.update(id_personal, data.model_dump(exclude_unset=True))
     if not item:
         raise HTTPException(status_code=404, detail="Registro de personal no encontrado")
     return item
 
 @router.delete("/{id_personal}")
-async def eliminar(id_personal: int, repo: PersonalRepository = Depends(get_repo)):
+async def eliminar(id_personal: int, repo: PersonalRepository = Depends(get_repo),
+                    usuario = Depends(requiere_admin)):
     repo.delete(id_personal)
     return {"mensaje": "Personal eliminado correctamente"}

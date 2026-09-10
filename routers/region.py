@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from core.database import get_db
 from core.repository import BaseRepository
 from models.schemas import RegionCreate, RegionUpdate, RegionResponse
+from core.auth_deps import obtener_usuario_actual, requiere_admin
 
 router = APIRouter()
 
@@ -39,3 +40,15 @@ async def actualizar(id_region: int, data: RegionUpdate, repo: RegionRepository 
 async def eliminar(id_region: int, repo: RegionRepository = Depends(get_repo)):
     repo.delete(id_region)
     return {"mensaje": "Región eliminada correctamente"}
+
+
+@router.get("/", response_model=list[RegionResponse])
+async def listar(limit: int = Query(100, ge=1), offset: int = Query(0, ge=0),
+                  repo: RegionRepository = Depends(get_repo),
+                  usuario=Depends(obtener_usuario_actual)):   # <- cualquiera logueado
+    return repo.get_all(limit=limit, offset=offset)
+
+@router.post("/", response_model=RegionResponse, status_code=201)
+async def crear(data: RegionCreate, repo: RegionRepository = Depends(get_repo),
+                 usuario=Depends(requiere_admin)):             # <- solo admin
+    return repo.create(data.model_dump(exclude_unset=True))
