@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from routers import auth
 from routers import preguntas
+from routers import estadisticas
 from routers import (
     region, especie_vegetal, zona_reforestacion, 
     tipo_sensor, sensor, personal, medicion, 
@@ -26,6 +27,7 @@ app.include_router(alerta.router, prefix="/api/v1/alertas", tags=["Alertas"])
 app.include_router(tratamiento.router, prefix="/api/v1/tratamientos", tags=["Tratamientos"])
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Autenticación"])
 app.include_router(preguntas.router, prefix="/api/v1/ia", tags=["Asistente IA"])
+app.include_router(estadisticas.router, prefix="/api/v1/estadisticas", tags=["Estadísticas (consultas SQL)"])
 @app.get("/", tags=["Inicio"])
 def home():
     return {"mensaje": "API de Estrés Hídrico funcionando correctamente"}
