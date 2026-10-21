@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1d6b46">
+  <title>Estrés Hídrico</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ============ LOGIN ============ -->
+  <main id="login" class="login" hidden>
+    <div class="login-card">
+      <img src="icon-192.png" alt="" class="logo" width="72" height="72">
+      <h1>Estrés Hídrico</h1>
+      <p class="sub">Monitoreo de suelo en zonas de reforestación</p>
+      <form id="form-login" autocomplete="on" novalidate>
+        <label for="email">Correo</label>
+        <input id="email" name="email" type="email" inputmode="email" autocomplete="username" required placeholder="usuario@correo.com">
+        <label for="clave">Contraseña</label>
+        <input id="clave" name="clave" type="password" autocomplete="current-password" required placeholder="••••••••">
+        <p id="login-error" class="error" role="alert" hidden></p>
+        <button type="submit" class="btn" id="btn-login">Ingresar</button>
+      </form>
+      <p class="hint" id="login-espera" hidden>El servidor gratuito se está despertando. Puede tardar hasta un minuto…</p>
+    </div>
+  </main>
+
+  <!-- ============ APP ============ -->
+  <div id="app" hidden>
+    <header class="top">
+      <div class="top-row">
+        <h1 id="titulo-vista">Inicio</h1>
+        <button class="icon-btn" id="btn-refrescar" aria-label="Actualizar datos" title="Actualizar">⟳</button>
+        <button class="icon-btn txt" id="btn-salir" aria-label="Cerrar sesión" title="Cerrar sesión">Salir</button>
+      </div>
+      <div class="zona-row" id="zona-row">
+        <label for="zona">Zona</label>
+        <select id="zona"><option value="">Todas</option></select>
+      </div>
+    </header>
+
+    <div id="aviso" class="aviso" hidden></div>
+
+    <main id="vista" tabindex="-1"></main>
+
+    <nav class="tabs" aria-label="Secciones">
+      <button data-tab="inicio" class="on"><span class="ti">⌂</span>Inicio</button>
+      <button data-tab="dashboard"><span class="ti">▥</span>Dashboard</button>
+      <button data-tab="prediccion"><span class="ti">✦</span>Predicción</button>
+    </nav>
+  </div>
+
+  <script src="charts.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+import os
 from routers import auth
 from routers import preguntas
 from routers import estadisticas
@@ -31,3 +33,6 @@ app.include_router(estadisticas.router, prefix="/api/v1/estadisticas", tags=["Es
 @app.get("/", tags=["Inicio"])
 def home():
     return {"mensaje": "API de Estrés Hídrico funcionando correctamente"}
+
+# App movil (web app instalable como APK). Va al final para no tapar las rutas /api.
+app.mount("/app", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "static_app"), html=True), name="app")
